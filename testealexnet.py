@@ -5,8 +5,10 @@ from torchvision.models import alexnet
 import torch.nn as nn
 import torch.optim as optim
 import time
+import pandas as pd
 
-print("Iniciando código")
+print('Iniciando Código')
+
 # Define a transformação para o dataset MNIST
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
@@ -27,7 +29,6 @@ classes = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
 
 net = alexnet(num_classes=10)
 
-print("Começando Treinamento")
 # Define a função de perda e otimizador
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
@@ -56,8 +57,12 @@ print('Finished Training')
 #print('Predicted: ', ' '.join(f'{classes[predicted[j]]:5s}'
 #                              for j in range(4)))
 
+# Criar listas para armazenar os dados
+samples = []
+inference_times = []
 correct = 0
 total = 0
+
 # since we're not training, we don't need to calculate the gradients for our outputs
 with torch.no_grad():
     for data in testloader:
@@ -77,6 +82,16 @@ with torch.no_grad():
 
             # Imprime o tempo de inferência para a amostra atual
             print(f'Inference time for sample {total}: {inference_time:.5f} seconds')
+
+            # Adicionar os dados às listas
+            samples.append(total)
+            inference_times.append(inference_time)
+
+# Criar um DataFrame do Pandas com os dados
+data = pd.DataFrame({'Sample': samples, 'Inference Time': inference_times})
+
+# Salvar o DataFrame em um arquivo CSV
+data.to_csv('dados.csv', index=False)
         
 print(f'Accuracy of the network on the 10000 test images: {100 * correct // total} %')
 
