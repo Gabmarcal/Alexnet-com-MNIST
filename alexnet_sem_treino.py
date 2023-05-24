@@ -8,7 +8,7 @@ import time
 import pandas as pd
 
 # Verificar se a GPU está disponível
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu") #"cuda" if torch.cuda.is_available() else "cpu"
 
 print('Iniciando Código')
 
